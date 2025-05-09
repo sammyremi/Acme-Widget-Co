@@ -21,4 +21,32 @@ class Basket
         format('%.2f', final_amount).to_f
     end
     
+    private
+
+    def calculate_subtotal
+        total = 0
+        for x in @items
+          total += @products[x][:price]
+        end
+        total
+    end
+
+    def calculate_delivery_fee(total)
+        for x in @delivery_rules
+          if total < x[:threshold]
+            return x[:charge]
+          end
+        end
+        return 0.0
+    end
+
+    def apply_offers
+        total_discount = 0
+        for offer in @offers
+          total_discount += offer.call(@items, @products)
+        end
+        total_discount
+    end
+
+    
 end
